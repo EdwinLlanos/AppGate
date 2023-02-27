@@ -1,6 +1,5 @@
 package com.appgate.authentication.network;
 
-import android.util.Log;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,17 +14,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class RestClientHandler {
-    private static final String TAG = RestClientHandler.class.getCanonicalName();
+    private static final int TIME_OUT = 5000;
+    private static final int INITIAL_CAPACITY = 1024;
 
-    public <T> void execute(String endPoint, OnRequestCompletedListener<T> callable) {
+    public void execute(String endPoint, OnRequestCompletedListener<String> callable) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         Future<String> futureResult = executor.submit(() -> createHttpURLConnection(endPoint));
-
         try {
             String result = futureResult.get();
-            callable.onSuccess((T) result);
-            Log.d(TAG, result);
+            callable.onSuccess(result);
         } catch (InterruptedException | ExecutionException e) {
             callable.onError(e);
         } finally {
@@ -39,14 +36,17 @@ public class RestClientHandler {
         try {
             URL url = new URL(method);
             urlConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
+            urlConnection.setConnectTimeout(TIME_OUT);
+            urlConnection.setReadTimeout(TIME_OUT);
+            try (InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                StringBuilder stringBuilder = new StringBuilder(INITIAL_CAPACITY);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+                data = stringBuilder.toString();
             }
-            data = stringBuilder.toString();
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

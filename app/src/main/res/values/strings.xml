@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">AppGateTest</string>
+    <string name="username_hint">User name</string>
+    <string name="password_hint">User password</string>
+    <string name="btn_login">Login</string>
+    <string name="general_loading">Loading...</string>
+    <!--    Warning-->
+    <string name="warning_email_required">El email es requerido.</string>
+    <string name="warning_password_required">La contraseña es requerida.</string>
+    <string name="warning_email_not_valid">El email no es valido.</string>
+    <string name="warning_password_not_valid">La contraseña debe tener mínimo 8 caracteres donde incluya mayúsculas, minúsculas, números y caracteres especiales.</string>
+
 </resources>

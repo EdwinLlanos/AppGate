@@ -1,8 +1,8 @@
 package com.appgate.authentication.di;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import com.appgate.authentication.data.datasource.local.db.AuthenticationHandler;
+import com.appgate.authentication.data.datasource.local.db.AuthenticationHelper;
+import com.appgate.authentication.data.datasource.local.keystore.KeyStoreHelper;
 import com.appgate.authentication.data.datasource.remote.AutApiMapper;
 import com.appgate.authentication.data.datasource.remote.AuthApi;
 import com.appgate.authentication.data.repository.AuthRepositoryImpl;
@@ -22,12 +22,12 @@ public class Injector {
         return new GetAttemptsUseCase(authRepository);
     }
 
-    @NonNull
     private AuthRepository createAuthRepository(Context context) {
-        AuthenticationHandler authenticationHandler = new AuthenticationHandler(context);
+        AuthenticationHelper authenticationHelper = new AuthenticationHelper(context);
         AutApiMapper autApiMapper = new AutApiMapper();
         RestClientHandler restClientHandler = new RestClientHandler();
         AuthApi authApi = new AuthApi(autApiMapper, restClientHandler);
-        return new AuthRepositoryImpl(authApi, authenticationHandler);
+        KeyStoreHelper keyStoreHelper = new KeyStoreHelper(context);
+        return new AuthRepositoryImpl(authApi, authenticationHelper, keyStoreHelper);
     }
 }

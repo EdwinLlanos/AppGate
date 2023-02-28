@@ -16,7 +16,7 @@ import static com.appgate.authentication.data.datasource.local.entity.AttemptCon
 import static com.appgate.authentication.data.datasource.local.entity.AttemptContract.AttemptEntry.COLUMN_NAME_TIME_ZONE;
 import static com.appgate.authentication.data.datasource.local.entity.AttemptContract.AttemptEntry.TABLE_NAME;
 
-public class AuthenticationHandler extends SQLiteOpenHelper {
+public class AuthenticationHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Authentication.db";
@@ -26,7 +26,7 @@ public class AuthenticationHandler extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public AuthenticationHandler(@Nullable Context context) {
+    public AuthenticationHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

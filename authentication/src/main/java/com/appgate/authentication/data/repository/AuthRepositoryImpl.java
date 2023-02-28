@@ -1,7 +1,9 @@
 package com.appgate.authentication.data.repository;
 
-import com.appgate.authentication.data.datasource.local.db.AuthenticationHandler;
+import android.util.Pair;
+import com.appgate.authentication.data.datasource.local.db.AuthenticationHelper;
 import com.appgate.authentication.data.datasource.local.entity.AttemptEntity;
+import com.appgate.authentication.data.datasource.local.keystore.KeyStoreHelper;
 import com.appgate.authentication.data.datasource.remote.AuthApi;
 import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
 import com.appgate.authentication.domain.model.AttemptModel;
@@ -14,11 +16,13 @@ import java.util.List;
 public class AuthRepositoryImpl implements AuthRepository {
 
     private final AuthApi authApi;
-    private final AuthenticationHandler authenticationHandler;
+    private final AuthenticationHelper authenticationHelper;
+    private final KeyStoreHelper keyStoreHelper;
 
-    public AuthRepositoryImpl(AuthApi authApi, AuthenticationHandler authenticationHandler) {
+    public AuthRepositoryImpl(AuthApi authApi, AuthenticationHelper authenticationHelper, KeyStoreHelper keyStoreHelper) {
         this.authApi = authApi;
-        this.authenticationHandler = authenticationHandler;
+        this.authenticationHelper = authenticationHelper;
+        this.keyStoreHelper = keyStoreHelper;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class AuthRepositoryImpl implements AuthRepository {
                 attemptEntity.setTimeZone(response.getTimeZone());
                 attemptEntity.setCurrentLocalTime(response.getCurrentLocalTime());
                 attemptEntity.setStatus(status.getValue());
-                authenticationHandler.addAttempt(attemptEntity);
+                authenticationHelper.addAttempt(attemptEntity);
                 listener.onSuccess(response);
             }
 
@@ -44,7 +48,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     @Override
     public void getAttempts(OnRequestCompletedListener<List<AttemptModel>> listener) {
         List<AttemptModel> attemptList = new ArrayList<>();
-        for (AttemptEntity item : authenticationHandler.getAllAttempts()) {
+        for (AttemptEntity item : authenticationHelper.getAllAttempts()) {
             attemptList.add(new AttemptModel(item.getTimeZone(), item.getCurrentLocalTime(), item.getStatus()));
         }
         if (!attemptList.isEmpty()) {
@@ -52,5 +56,14 @@ public class AuthRepositoryImpl implements AuthRepository {
         } else {
             listener.onError(new Exception("No data found"));
         }
+    }
+    @Override
+    public void encryptCredentials(String user, String password, OnRequestCompletedListener<Boolean> listener) {
+        keyStoreHelper.encrypt(user, password, listener);
+    }
+
+    @Override
+    public void decryptCredentials(OnRequestCompletedListener<Pair<String, String>> listener) {
+        keyStoreHelper.decrypt(listener);
     }
 }

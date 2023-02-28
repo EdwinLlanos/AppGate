@@ -1,6 +1,6 @@
 package com.appgate.authentication.data.datasource.remote;
 
-import com.appgate.authentication.data.datasource.remote.model.TimeModel;
+import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import com.appgate.authentication.network.RestClientHandler;
 import org.json.JSONException;
@@ -17,7 +17,7 @@ public class AuthApi {
         this.restClientHandler = restClientHandler;
     }
 
-    public void sigInAttempt(double lat, double lng, OnRequestCompletedListener<TimeModel> callable) {
+    public void sigInAttempt(double lat, double lng, OnRequestCompletedListener<TimeResponse> callable) {
         String timeZoneEndPoint = TIME_ZONE_END_POINT + LATITUDE_PARAMETER + "=" + lat + "&" + LONGITUDE_PARAMETER + "+=" + lng + "";
 
         restClientHandler.execute(timeZoneEndPoint, new OnRequestCompletedListener<String>() {

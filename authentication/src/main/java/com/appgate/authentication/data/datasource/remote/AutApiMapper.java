@@ -1,6 +1,6 @@
 package com.appgate.authentication.data.datasource.remote;
 
-import com.appgate.authentication.data.datasource.remote.model.TimeModel;
+import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,11 +8,8 @@ public class AutApiMapper {
     private static final String TIME_ZONE = "timeZone";
     private static final String CURRENT_LOCAL_TIME = "currentLocalTime";
 
-    public TimeModel createTimeModel(String result) throws JSONException {
-        TimeModel timeModel = new TimeModel();
+    public TimeResponse createTimeModel(String result) throws JSONException {
         JSONObject object = new JSONObject(result);
-        timeModel.setTimeZone(object.getString(TIME_ZONE));
-        timeModel.setCurrentLocalTime(object.getString(CURRENT_LOCAL_TIME));
-        return timeModel;
+        return new TimeResponse(object.getString(TIME_ZONE), object.getString(CURRENT_LOCAL_TIME));
     }
 }

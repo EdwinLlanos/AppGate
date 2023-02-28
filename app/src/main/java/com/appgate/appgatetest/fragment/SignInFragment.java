@@ -11,27 +11,28 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
-import com.appgate.appgatetest.databinding.FragmentLoginBinding;
+import com.appgate.appgatetest.MainActivity;
+import com.appgate.appgatetest.databinding.FragmentSignInBinding;
 import com.appgate.appgatetest.factory.ViewModelFactory;
-import com.appgate.appgatetest.viewmodel.LoginViewModel;
+import com.appgate.appgatetest.viewmodel.SignInViewModel;
 import com.appgate.authentication.di.Injector;
-import com.appgate.authentication.domain.usecase.GetAttemptsUseCase;
-import com.appgate.authentication.domain.usecase.LoginUseCase;
+import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
+import com.appgate.authentication.domain.usecase.SignInUseCase;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
-public class LoginFragment extends Fragment implements DefaultLifecycleObserver {
+public class SignInFragment extends Fragment implements DefaultLifecycleObserver {
 
-    private FragmentLoginBinding binding;
-    private LoginViewModel viewModel;
+    private FragmentSignInBinding binding;
+    private SignInViewModel viewModel;
 
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
+    public static SignInFragment newInstance() {
+        return new SignInFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentLoginBinding.inflate(inflater, container, false);
+        binding = FragmentSignInBinding.inflate(inflater, container, false);
         initListener();
         return binding.getRoot();
     }
@@ -50,25 +51,34 @@ public class LoginFragment extends Fragment implements DefaultLifecycleObserver 
         if (getActivity() != null) {
             getActivity().getLifecycle().removeObserver(this);
         }
-        LoginUseCase loginUseCase = new Injector().createLoginUseCase(getContext());
-        GetAttemptsUseCase getAttemptsUseCase = new Injector().createGetAttemptUseCase(getContext());
-        ViewModelFactory factory = new ViewModelFactory(loginUseCase, getAttemptsUseCase);
-        viewModel = new ViewModelProvider(this, factory).get(LoginViewModel.class);
+        SignInUseCase signInUseCase = new Injector().createSignInUseCase(getContext());
+        SaveAttemptUseCase saveAttemptUseCase = new Injector().createSaveAttemptUseCase(getContext());
+        ViewModelFactory factory = new ViewModelFactory(signInUseCase, saveAttemptUseCase);
+        viewModel = new ViewModelProvider(this, factory).get(SignInViewModel.class);
         viewModel.getStateUI().observe(this, stateUIModel -> {
-            if (Objects.nonNull(stateUIModel.getMessage())) {
-                showMessage(stateUIModel.getMessage());
-            }
-            if (stateUIModel.getMessageResource() != 0) {
-                showMessage(getResources().getString(stateUIModel.getMessageResource()));
+            if (stateUIModel.navigateToAttemptsScreen) {
+                getMainActivity().navigateToAttemptScreen();
+            } else if (Objects.nonNull(stateUIModel.message)) {
+                showMessage(stateUIModel.message);
+            } else if (stateUIModel.messageResource != 0) {
+                showMessage(getResources().getString(stateUIModel.messageResource));
             }
         });
     }
 
     private void initListener() {
-        binding.loginBtn.setOnClickListener(view -> {
-            // Validate user and password, sending them to viewModel and then to use case
+        binding.singUpBtn.setOnClickListener(view -> {
+            if (getMainActivity() != null) {
+                getMainActivity().navigateToSignUpScreen();
+            }
+        });
+        binding.singInBtn.setOnClickListener(view -> {
             viewModel.checkCredentials(Objects.requireNonNull(binding.emailEdt.getText()).toString(), Objects.requireNonNull(binding.passwordEdt.getText()).toString());
         });
+    }
+
+    public MainActivity getMainActivity() {
+        return (MainActivity) getContext();
     }
 
     private void showMessage(String message) {

@@ -1,13 +1,23 @@
 <resources>
     <string name="app_name">AppGateTest</string>
-    <string name="username_hint">User name</string>
-    <string name="password_hint">User password</string>
-    <string name="btn_login">Login</string>
-    <string name="general_loading">Loading...</string>
-    <!--    Warning-->
+    <!--Hints-->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_password_confirm">Confirmar contraseña</string>
+    <!--buttons-->
+    <string name="btn_sing_in">Ingresar</string>
+    <string name="btn_sing_up">Registrarme</string>
+    <!--Messages-->
+    <string name="message_loading">Loading…</string>
+    <string name="message_attempt_save_successful">Intento guardado exitosamente.</string>
+    <!--Warnings-->
     <string name="warning_email_required">El email es requerido.</string>
     <string name="warning_password_required">La contraseña es requerida.</string>
+    <string name="warning_password_confirm_required">Debes confirmar la contraseña.</string>
+    <string name="warning_wrong_passwords">Las contraseñas no son iguales.</string>
     <string name="warning_email_not_valid">El email no es valido.</string>
     <string name="warning_password_not_valid">La contraseña debe tener mínimo 8 caracteres donde incluya mayúsculas, minúsculas, números y caracteres especiales.</string>
-
+    <!--Warnings-->
+    <string name="error_unexpected">Error inesperado.</string>
+    <string name="error_incorrect_credentials">Email o contraseña no son correctos.</string>
 </resources>

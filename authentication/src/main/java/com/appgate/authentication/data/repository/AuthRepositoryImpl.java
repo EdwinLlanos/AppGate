@@ -26,7 +26,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public void sigInAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
+    public void saveAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
         authApi.sigInAttempt(lat, lng, new OnRequestCompletedListener<TimeResponse>() {
             @Override
             public void onSuccess(TimeResponse response) {
@@ -57,6 +57,7 @@ public class AuthRepositoryImpl implements AuthRepository {
             listener.onError(new Exception("No data found"));
         }
     }
+
     @Override
     public void encryptCredentials(String user, String password, OnRequestCompletedListener<Boolean> listener) {
         keyStoreHelper.encrypt(user, password, listener);

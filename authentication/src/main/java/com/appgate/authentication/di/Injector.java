@@ -8,18 +8,30 @@ import com.appgate.authentication.data.datasource.remote.AuthApi;
 import com.appgate.authentication.data.repository.AuthRepositoryImpl;
 import com.appgate.authentication.domain.repository.AuthRepository;
 import com.appgate.authentication.domain.usecase.GetAttemptsUseCase;
-import com.appgate.authentication.domain.usecase.LoginUseCase;
+import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
+import com.appgate.authentication.domain.usecase.SignInUseCase;
+import com.appgate.authentication.domain.usecase.SignUpUseCase;
 import com.appgate.authentication.network.RestClientHandler;
 
 public class Injector {
-    public LoginUseCase createLoginUseCase(Context context) {
+    public SignInUseCase createSignInUseCase(Context context) {
         AuthRepository authRepository = createAuthRepository(context);
-        return new LoginUseCase(authRepository);
+        return new SignInUseCase(authRepository);
     }
 
-    public GetAttemptsUseCase createGetAttemptUseCase(Context context) {
+    public SignUpUseCase createSignUpUseCase(Context context) {
+        AuthRepository authRepository = createAuthRepository(context);
+        return new SignUpUseCase(authRepository);
+    }
+
+    public GetAttemptsUseCase createGetAttemptsUseCase(Context context) {
         AuthRepository authRepository = createAuthRepository(context);
         return new GetAttemptsUseCase(authRepository);
+    }
+
+    public SaveAttemptUseCase createSaveAttemptUseCase(Context context) {
+        AuthRepository authRepository = createAuthRepository(context);
+        return new SaveAttemptUseCase(authRepository);
     }
 
     private AuthRepository createAuthRepository(Context context) {

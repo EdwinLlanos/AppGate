@@ -7,7 +7,7 @@ import com.appgate.authentication.domain.model.AttemptStatus;
 import java.util.List;
 
 public interface AuthRepository {
-    void sigInAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener);
+    void saveAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener);
 
     void getAttempts(OnRequestCompletedListener<List<AttemptModel>> listener);
 

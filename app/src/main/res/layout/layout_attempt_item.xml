@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/clContainer"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="@dimen/dimen_size_70">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/timeZoneTxv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/dimen_size_16"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/currentLocalTimeTxv"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,7 @@
         android:id="@+id/currentLocalTimeTxv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/dimen_size_16"
         android:textColor="@color/white"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +32,7 @@
         android:id="@+id/statusTxv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/dimen_size_16"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/dimen_size_1"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

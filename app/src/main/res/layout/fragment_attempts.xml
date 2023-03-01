@@ -15,9 +15,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
+            android:layout_width="@dimen/dimen_size_0"
+            android:layout_height="@dimen/dimen_size_0"
+            android:layout_margin="@dimen/dimen_size_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

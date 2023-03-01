@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.annotation.Nullable;
 import com.appgate.authentication.data.datasource.local.entity.AttemptContract.LocationEntry;
 import com.appgate.authentication.data.datasource.local.entity.AttemptEntity;
 import com.appgate.authentication.data.datasource.local.entity.LocationEntity;
@@ -37,7 +36,7 @@ public class AuthenticationHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_LOCATION_ENTRIES = "DROP TABLE IF EXISTS " + LocationEntry.TABLE_NAME;
 
 
-    public AuthenticationHelper(@Nullable Context context) {
+    public AuthenticationHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

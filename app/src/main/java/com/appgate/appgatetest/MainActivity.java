@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import com.appgate.appgatetest.databinding.ActivityMainBinding;
 import com.appgate.appgatetest.fragment.AttemptFragment;
 import com.appgate.appgatetest.fragment.SignInFragment;
 import com.appgate.appgatetest.fragment.SignUpFragment;
@@ -22,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION_PERMISSION = 100;
     private static final int NUMBER_ZERO = 0;
-
-    LocationService locationService;
+    private LocationService locationService;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         checkLocationGrant();
     }
 
@@ -60,29 +63,40 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > NUMBER_ZERO && grantResults[NUMBER_ZERO] == PackageManager.PERMISSION_GRANTED) {
                 startLocationService();
             } else {
-                showLocationAlert(getString(R.string.message_location_permission_required));
+                showLocationAlert(getString(R.string.description_location_permission_required));
             }
         } else {
-            showLocationAlert(getString(R.string.message_location_permission_required));
+            showLocationAlert(getString(R.string.description_location_permission_required));
         }
     }
 
     private void startLocationService() {
+        showProgressBar();
         locationService = new LocationService(this, new OnRequestCompletedListener<Location>() {
             @Override
             public void onSuccess(Location location) {
+                hideProgressBar();
                 navigateToSignInScreen(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
                 destroyLocationService();
             }
 
             @Override
             public void onError(Throwable throwable) {
+                hideProgressBar();
                 showLocationAlert(throwable.getMessage());
             }
         });
         if (!locationService.isLocationEnabled()) {
-            showLocationAlert(getString(R.string.message_gps_enable_required));
+            showLocationAlert(getString(R.string.description_gps_enable_required));
         }
+    }
+
+    private void hideProgressBar() {
+        binding.progressBar.setVisibility(View.GONE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
     }
 
     private void switchToFragment(Fragment fragment) {

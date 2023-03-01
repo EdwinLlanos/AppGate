@@ -62,9 +62,9 @@ public class AttemptAdapter extends RecyclerView.Adapter<AttemptAdapter.AttemptH
         }
 
         private int getStatus(int status) {
-            int statusTuResource = R.string.message_status_success;
+            int statusTuResource = R.string.description_status_success;
             if (status == NUMBER_ZERO) {
-                statusTuResource = R.string.message_status_failure;
+                statusTuResource = R.string.description_status_failure;
             }
             return statusTuResource;
         }

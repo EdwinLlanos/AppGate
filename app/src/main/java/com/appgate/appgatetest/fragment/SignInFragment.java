@@ -74,7 +74,7 @@ public class SignInFragment extends BaseFragment {
         viewModel.getMessageString().observe(this, this::showMessage);
         viewModel.getMessageResource().observe(this, this::showMessage);
         viewModel.getLoading().observe(this, this::showProgressBar);
-        viewModel.getNavigateToAttemptsScreen().observe(this, navigateToAttemptsScreen -> {
+        viewModel.getSaveAttemptSuccess().observe(this, navigateToAttemptsScreen -> {
             if (navigateToAttemptsScreen) {
                 getMainActivity().navigateToAttemptScreen();
             }

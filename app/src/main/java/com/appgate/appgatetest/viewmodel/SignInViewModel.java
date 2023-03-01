@@ -1,7 +1,5 @@
 package com.appgate.appgatetest.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import com.appgate.appgatetest.R;
 import com.appgate.appgatetest.base.viewmodel.BaseViewModel;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
@@ -18,17 +16,10 @@ public class SignInViewModel extends BaseViewModel {
     private final SignInUseCase signInUseCase;
     private final SaveLocationUseCase saveLocationUseCase;
 
-    private final MutableLiveData<Boolean> navigateToAttemptsScreen;
-
     public SignInViewModel(SignInUseCase signInUseCase, SaveAttemptUseCase saveAttemptUseCase, SaveLocationUseCase saveLocationUseCase) {
         super(saveAttemptUseCase);
         this.signInUseCase = signInUseCase;
         this.saveLocationUseCase = saveLocationUseCase;
-        navigateToAttemptsScreen = new MutableLiveData<>(false);
-    }
-
-    public LiveData<Boolean> getNavigateToAttemptsScreen() {
-        return navigateToAttemptsScreen;
     }
 
     public void checkCredentials(String email, String password) {
@@ -64,6 +55,7 @@ public class SignInViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable throwable) {
+                saveAttempt(FAILURE);
                 handleFailure(throwable);
             }
         });
@@ -75,11 +67,10 @@ public class SignInViewModel extends BaseViewModel {
 
     private void handlerValidateCredentialsSuccess(Boolean response) {
         if (response) {
-            navigateToAttemptsScreen.postValue(true);
             saveAttempt(SUCCESS);
         } else {
             saveAttempt(FAILURE);
-            messageResource.postValue(R.string.error_incorrect_credentials);
+            messageResource.setValue(R.string.error_incorrect_credentials);
         }
     }
 }

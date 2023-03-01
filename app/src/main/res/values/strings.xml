@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AppGateTest</string>
+    <string name="app_name">AppGate</string>
     <!--Hints-->
     <string name="hint_email">Email</string>
     <string name="hint_password">Contraseña</string>
@@ -8,12 +8,12 @@
     <string name="btn_sing_in">Ingresar</string>
     <string name="btn_sing_up">Registrarme</string>
     <string name="btn_ok">Aceptar</string>
-    <!--Messages-->
-    <string name="message_status_success">Exitoso</string>
-    <string name="message_status_failure">Fallido</string>
-    <string name="message_location_permission_required">"Para usar la aplicación se requieren los permisos de ubicación"</string>
-    <string name="message_gps_enable_required">"Para usar la aplicación se requiere que enciendas el GPS"</string>
-
+    <!--descriptions-->
+    <string name="description_status_success">Exitoso</string>
+    <string name="description_status_failure">Fallido</string>
+    <string name="description_location_permission_required">Para usar la aplicación se requieren los permisos de ubicación.</string>
+    <string name="description_gps_enable_required">Para usar la aplicación se requiere que enciendas el GPS.</string>
+    <string name="description_sing_in_screen">Si tienes cuenta ingresa, sino regístrate.</string>
     <!--Warnings-->
     <string name="warning_email_required">El email es requerido.</string>
     <string name="warning_password_required">La contraseña es requerida.</string>

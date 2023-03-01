@@ -53,10 +53,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_edt" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="30dp"
+            android:text="@string/description_sing_in_screen"
+            android:textColor="@color/black"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@id/sing_in_btn"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

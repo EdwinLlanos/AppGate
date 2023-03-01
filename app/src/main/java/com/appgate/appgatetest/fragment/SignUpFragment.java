@@ -48,7 +48,7 @@ public class SignUpFragment extends BaseFragment {
     }
 
     private void initObservers() {
-        viewModel.getNavigateToSignInScreen().observe(this, navigateToSignInScreen -> {
+        viewModel.getSaveAttemptSuccess().observe(this, navigateToSignInScreen -> {
             if (navigateToSignInScreen) {
                 getMainActivity().navigateToSignInScreen();
             }

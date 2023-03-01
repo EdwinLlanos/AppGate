@@ -30,8 +30,8 @@ public class LocationService extends Service implements LocationListener {
             return;
         }
 
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
     public Boolean isLocationEnabled() {

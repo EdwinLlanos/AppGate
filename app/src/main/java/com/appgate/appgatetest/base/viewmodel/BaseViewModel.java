@@ -8,12 +8,14 @@ import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
 import com.appgate.authentication.domain.model.AttemptStatus;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
+import java.util.concurrent.Executors;
 
 public class BaseViewModel extends ViewModel {
     private final String TAG = BaseViewModel.class.getName();
     public MutableLiveData<String> messageString;
     public MutableLiveData<Integer> messageResource;
     public MutableLiveData<Boolean> loading;
+    public MutableLiveData<Boolean> saveAttemptSuccess;
     private SaveAttemptUseCase saveAttemptUseCase;
 
     public BaseViewModel() {
@@ -24,6 +26,7 @@ public class BaseViewModel extends ViewModel {
         messageString = new MutableLiveData<>("");
         messageResource = new MutableLiveData<>(0);
         loading = new MutableLiveData<>(false);
+        saveAttemptSuccess = new MutableLiveData<>(false);
     }
 
     public LiveData<String> getMessageString() {
@@ -38,8 +41,12 @@ public class BaseViewModel extends ViewModel {
         return loading;
     }
 
+    public LiveData<Boolean> getSaveAttemptSuccess() {
+        return saveAttemptSuccess;
+    }
+
     public void showMessage(int resource) {
-        messageResource.postValue(resource);
+        messageResource.setValue(resource);
     }
 
     public void handleFailure(Throwable throwable) {
@@ -48,19 +55,20 @@ public class BaseViewModel extends ViewModel {
 
     public void saveAttempt(AttemptStatus status) {
         showLoading();
-        saveAttemptUseCase.saveAttempt(status, new OnRequestCompletedListener<TimeResponse>() {
-            @Override
-            public void onSuccess(TimeResponse response) {
-                handleSaveAttemptSuccess(response.toString());
-                hideLoading();
-            }
+        Executors.newSingleThreadExecutor().execute(() ->
+                saveAttemptUseCase.saveAttempt(status, new OnRequestCompletedListener<TimeResponse>() {
+                    @Override
+                    public void onSuccess(TimeResponse response) {
+                        handleSaveAttemptSuccess(status, response.toString());
+                        hideLoading();
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                handleFailure(throwable);
-                hideLoading();
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        handleFailure(throwable);
+                        hideLoading();
+                    }
+                }));
     }
 
     public void showLoading() {
@@ -71,7 +79,10 @@ public class BaseViewModel extends ViewModel {
         loading.postValue(false);
     }
 
-    private void handleSaveAttemptSuccess(String response) {
+    private void handleSaveAttemptSuccess(AttemptStatus status, String response) {
+        if (status.equals(AttemptStatus.SUCCESS)) {
+            saveAttemptSuccess.postValue(true);
+        }
         Log.d(TAG, response);
     }
 }

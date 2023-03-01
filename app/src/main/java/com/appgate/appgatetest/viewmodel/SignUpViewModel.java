@@ -1,12 +1,11 @@
 package com.appgate.appgatetest.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import com.appgate.appgatetest.R;
 import com.appgate.appgatetest.base.viewmodel.BaseViewModel;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
 import com.appgate.authentication.domain.usecase.SignUpUseCase;
+import java.util.concurrent.Executors;
 
 import static com.appgate.appgatetest.util.Constant.EMAIL_PATTERN;
 import static com.appgate.appgatetest.util.Constant.PASSWORD_PATTERN;
@@ -16,16 +15,9 @@ import static com.appgate.authentication.domain.model.AttemptStatus.SUCCESS;
 public class SignUpViewModel extends BaseViewModel {
     private final SignUpUseCase signInUseCase;
 
-    private final MutableLiveData<Boolean> navigateToSignInScreen;
-
     public SignUpViewModel(SignUpUseCase signInUseCase, SaveAttemptUseCase saveAttemptUseCase) {
         super(saveAttemptUseCase);
         this.signInUseCase = signInUseCase;
-        navigateToSignInScreen = new MutableLiveData<>(false);
-    }
-
-    public LiveData<Boolean> getNavigateToSignInScreen() {
-        return navigateToSignInScreen;
     }
 
     public void checkCredentials(String email, String password, String passwordConfirm) {
@@ -63,25 +55,27 @@ public class SignUpViewModel extends BaseViewModel {
     }
 
     private void encryptCredentials(String email, String password) {
-        signInUseCase.encryptCredentials(email, password, new OnRequestCompletedListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean response) {
-                handlerEncryptCredentialsSuccess(response);
-            }
+        showLoading();
+        Executors.newSingleThreadExecutor().execute(() ->
+                signInUseCase.encryptCredentials(email, password, new OnRequestCompletedListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean response) {
+                        handlerEncryptCredentialsSuccess(response);
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                handleFailure(throwable);
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        saveAttempt(FAILURE);
+                        handleFailure(throwable);
+                    }
+                }));
     }
 
     private void handlerEncryptCredentialsSuccess(Boolean response) {
         if (response) {
-            navigateToSignInScreen.postValue(true);
             saveAttempt(SUCCESS);
         } else {
-            messageResource.postValue(R.string.error_unexpected);
+            messageResource.setValue(R.string.error_unexpected);
             saveAttempt(FAILURE);
         }
     }

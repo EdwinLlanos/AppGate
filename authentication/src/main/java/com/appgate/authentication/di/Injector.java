@@ -9,6 +9,7 @@ import com.appgate.authentication.data.repository.AuthRepositoryImpl;
 import com.appgate.authentication.domain.repository.AuthRepository;
 import com.appgate.authentication.domain.usecase.GetAttemptsUseCase;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
+import com.appgate.authentication.domain.usecase.SaveLocationUseCase;
 import com.appgate.authentication.domain.usecase.SignInUseCase;
 import com.appgate.authentication.domain.usecase.SignUpUseCase;
 import com.appgate.authentication.network.RestClientHandler;
@@ -32,6 +33,11 @@ public class Injector {
     public SaveAttemptUseCase createSaveAttemptUseCase(Context context) {
         AuthRepository authRepository = createAuthRepository(context);
         return new SaveAttemptUseCase(authRepository);
+    }
+
+    public SaveLocationUseCase createSaveLocationUseCase(Context context) {
+        AuthRepository authRepository = createAuthRepository(context);
+        return new SaveLocationUseCase(authRepository);
     }
 
     private AuthRepository createAuthRepository(Context context) {

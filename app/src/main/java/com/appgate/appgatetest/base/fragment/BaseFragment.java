@@ -10,18 +10,19 @@ import androidx.lifecycle.LifecycleOwner;
 import com.appgate.appgatetest.MainActivity;
 import com.google.android.material.snackbar.Snackbar;
 
-public abstract class BaseFragment extends Fragment  implements DefaultLifecycleObserver {
+public abstract class BaseFragment extends Fragment implements DefaultLifecycleObserver {
 
     private static final int NUMBER_ZERO = 0;
-    public abstract void initUI();
     ProgressBar progressBar;
     View rootLayout;
 
-    public void setProgressBar(ProgressBar progressBar){
+    public abstract void initUI();
+
+    public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 
-    public void setRootLayout(View rootLayout){
+    public void setRootLayout(View rootLayout) {
         this.rootLayout = rootLayout;
     }
 
@@ -41,6 +42,7 @@ public abstract class BaseFragment extends Fragment  implements DefaultLifecycle
         }
         initUI();
     }
+
     public MainActivity getMainActivity() {
         return (MainActivity) getContext();
     }

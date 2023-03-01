@@ -3,6 +3,7 @@ package com.appgate.authentication.data.repository;
 import android.util.Pair;
 import com.appgate.authentication.data.datasource.local.db.AuthenticationHelper;
 import com.appgate.authentication.data.datasource.local.entity.AttemptEntity;
+import com.appgate.authentication.data.datasource.local.entity.LocationEntity;
 import com.appgate.authentication.data.datasource.local.keystore.KeyStoreHelper;
 import com.appgate.authentication.data.datasource.remote.AuthApi;
 import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
@@ -26,23 +27,25 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public void saveAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
-        authApi.sigInAttempt(lat, lng, new OnRequestCompletedListener<TimeResponse>() {
-            @Override
-            public void onSuccess(TimeResponse response) {
-                AttemptEntity attemptEntity = new AttemptEntity();
-                attemptEntity.setTimeZone(response.getTimeZone());
-                attemptEntity.setCurrentLocalTime(response.getCurrentLocalTime());
-                attemptEntity.setStatus(status.getValue());
-                authenticationHelper.addAttempt(attemptEntity);
-                listener.onSuccess(response);
-            }
+    public void saveAttempt(AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
+        authApi.sigInAttempt(authenticationHelper.getLastLocation().getLatitude(),
+                authenticationHelper.getLastLocation().getLongitude(),
+                new OnRequestCompletedListener<TimeResponse>() {
+                    @Override
+                    public void onSuccess(TimeResponse response) {
+                        AttemptEntity attemptEntity = new AttemptEntity();
+                        attemptEntity.setTimeZone(response.getTimeZone());
+                        attemptEntity.setCurrentLocalTime(response.getCurrentLocalTime());
+                        attemptEntity.setStatus(status.getValue());
+                        authenticationHelper.addAttempt(attemptEntity);
+                        listener.onSuccess(response);
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                listener.onError(throwable);
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        listener.onError(throwable);
+                    }
+                });
     }
 
     @Override
@@ -66,5 +69,13 @@ public class AuthRepositoryImpl implements AuthRepository {
     @Override
     public void decryptCredentials(OnRequestCompletedListener<Pair<String, String>> listener) {
         keyStoreHelper.decrypt(listener);
+    }
+
+    @Override
+    public void saveLocation(String latitude, String longitude) {
+        LocationEntity locationEntity = new LocationEntity();
+        locationEntity.setLatitude(latitude);
+        locationEntity.setLongitude(longitude);
+        authenticationHelper.addLocation(locationEntity);
     }
 }

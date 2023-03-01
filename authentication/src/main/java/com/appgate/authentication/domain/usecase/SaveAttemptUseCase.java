@@ -12,7 +12,7 @@ public class SaveAttemptUseCase {
         this.authRepository = authRepository;
     }
 
-    public void saveAttempt(double lat, double lng, AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
-        authRepository.saveAttempt(lat, lng, status, listener);
+    public void saveAttempt(AttemptStatus status, OnRequestCompletedListener<TimeResponse> listener) {
+        authRepository.saveAttempt(status, listener);
     }
 }

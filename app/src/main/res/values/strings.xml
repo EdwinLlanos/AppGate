@@ -7,9 +7,13 @@
     <!--buttons-->
     <string name="btn_sing_in">Ingresar</string>
     <string name="btn_sing_up">Registrarme</string>
+    <string name="btn_ok">Aceptar</string>
     <!--Messages-->
     <string name="message_status_success">Exitoso</string>
     <string name="message_status_failure">Fallido</string>
+    <string name="message_location_permission_required">"Para usar la aplicación se requieren los permisos de ubicación"</string>
+    <string name="message_gps_enable_required">"Para usar la aplicación se requiere que enciendas el GPS"</string>
+
     <!--Warnings-->
     <string name="warning_email_required">El email es requerido.</string>
     <string name="warning_password_required">La contraseña es requerida.</string>
@@ -17,6 +21,7 @@
     <string name="warning_wrong_passwords">Las contraseñas no son iguales.</string>
     <string name="warning_email_not_valid">El email no es valido.</string>
     <string name="warning_password_not_valid">La contraseña debe tener mínimo 8 caracteres donde incluya mayúsculas, minúsculas, números y caracteres especiales.</string>
+    <string name="warning_location">Alerta</string>
     <!--Warnings-->
     <string name="error_unexpected">Error inesperado.</string>
     <string name="error_incorrect_credentials">Email o contraseña no son correctos.</string>

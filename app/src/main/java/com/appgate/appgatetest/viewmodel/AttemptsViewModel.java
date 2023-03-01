@@ -13,6 +13,7 @@ public class AttemptsViewModel extends BaseViewModel {
     private final MutableLiveData<List<AttemptModel>> getAttemptsList;
 
     public AttemptsViewModel(GetAttemptsUseCase getAttemptsUseCase) {
+        super();
         this.getAttemptsUseCase = getAttemptsUseCase;
         getAttemptsList = new MutableLiveData<>();
     }

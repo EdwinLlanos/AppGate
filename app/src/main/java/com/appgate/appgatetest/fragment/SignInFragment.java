@@ -13,13 +13,24 @@ import com.appgate.appgatetest.factory.ViewModelFactory;
 import com.appgate.appgatetest.viewmodel.SignInViewModel;
 import com.appgate.authentication.di.Injector;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
+import com.appgate.authentication.domain.usecase.SaveLocationUseCase;
 import com.appgate.authentication.domain.usecase.SignInUseCase;
 import java.util.Objects;
 
 public class SignInFragment extends BaseFragment {
-
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
     private FragmentSignInBinding binding;
     private SignInViewModel viewModel;
+
+    public static SignInFragment newInstance(String latitude, String longitude) {
+        SignInFragment signInFragment = new SignInFragment();
+        Bundle args = new Bundle();
+        args.putString(LATITUDE, latitude);
+        args.putString(LONGITUDE, longitude);
+        signInFragment.setArguments(args);
+        return signInFragment;
+    }
 
     public static SignInFragment newInstance() {
         return new SignInFragment();
@@ -38,12 +49,24 @@ public class SignInFragment extends BaseFragment {
     public void initUI() {
         initViewModel();
         initObservers();
+        setLocation();
+    }
+
+    private void setLocation() {
+        Bundle args = getArguments();
+        if (args == null) return;
+        String latitude = args.getString(LATITUDE, null);
+        String longitude = args.getString(LONGITUDE, null);
+        if (latitude != null && longitude != null) {
+            viewModel.setLocation(latitude, longitude);
+        }
     }
 
     private void initViewModel() {
         SignInUseCase signInUseCase = new Injector().createSignInUseCase(getContext());
         SaveAttemptUseCase saveAttemptUseCase = new Injector().createSaveAttemptUseCase(getContext());
-        ViewModelFactory factory = new ViewModelFactory(signInUseCase, saveAttemptUseCase);
+        SaveLocationUseCase saveLocationUseCase = new Injector().createSaveLocationUseCase(getContext());
+        ViewModelFactory factory = new ViewModelFactory(signInUseCase, saveAttemptUseCase, saveLocationUseCase);
         viewModel = new ViewModelProvider(this, factory).get(SignInViewModel.class);
     }
 

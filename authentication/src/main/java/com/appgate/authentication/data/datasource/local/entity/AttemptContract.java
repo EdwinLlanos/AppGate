@@ -13,4 +13,11 @@ public final class AttemptContract {
         public static final String COLUMN_NAME_CURRENT_LOCAL_TIME = "currentLocalTime";
         public static final String COLUMN_NAME_STATUS = "status";
     }
+
+    public static class LocationEntry implements BaseColumns {
+        public static final String TABLE_NAME = "location";
+        public static final String COLUMN_NAME_ID = "id";
+        public static final String COLUMN_NAME_LATITUDE = "latitude";
+        public static final String COLUMN_NAME_LONGITUDE = "longitude";
+    }
 }

@@ -37,8 +37,8 @@ public class AttemptAdapter extends RecyclerView.Adapter<AttemptAdapter.AttemptH
     }
 
     public static class AttemptHolder extends RecyclerView.ViewHolder {
-        private final LayoutAttemptItemBinding itemBinding;
         private static final int NUMBER_ZERO = 0;
+        private final LayoutAttemptItemBinding itemBinding;
 
         public AttemptHolder(LayoutAttemptItemBinding itemBinding) {
             super(itemBinding.getRoot());

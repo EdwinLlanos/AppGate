@@ -17,7 +17,7 @@ public class AuthApi {
         this.restClientHandler = restClientHandler;
     }
 
-    public void sigInAttempt(double lat, double lng, OnRequestCompletedListener<TimeResponse> callable) {
+    public void sigInAttempt(String lat, String lng, OnRequestCompletedListener<TimeResponse> callable) {
         String timeZoneEndPoint = TIME_ZONE_END_POINT + LATITUDE_PARAMETER + "=" + lat + "&" + LONGITUDE_PARAMETER + "+=" + lng + "";
 
         restClientHandler.execute(timeZoneEndPoint, new OnRequestCompletedListener<String>() {

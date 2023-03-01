@@ -94,25 +94,29 @@ public class KeyStoreHelper {
             String encryptedUsernameString = sharedPreferences.getString(USERNAME_KEY, null);
             String encryptedPasswordString = sharedPreferences.getString(PASSWORD_KEY, null);
 
-            if (encryptedUsernameString != null && encryptedPasswordString != null) {
-                byte[] encryptedUsernameBytes = Base64.decode(encryptedUsernameString, Base64.DEFAULT);
-                byte[] encryptedPasswordBytes = Base64.decode(encryptedPasswordString, Base64.DEFAULT);
-
-                KeyStore.Entry entry = keyStore.getEntry(ALIAS, null);
-                if (entry instanceof KeyStore.PrivateKeyEntry) {
-                    KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) entry;
-
-                    Cipher cipher = Cipher.getInstance(CHIPPER_TRANSFORMATION);
-                    cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
-
-                    byte[] decryptedUsernameBytes = cipher.doFinal(encryptedUsernameBytes);
-                    byte[] decryptedPasswordBytes = cipher.doFinal(encryptedPasswordBytes);
-
-                    String username = new String(decryptedUsernameBytes);
-                    String password = new String(decryptedPasswordBytes);
-                    listener.onSuccess(Pair.create(username, password));
-                }
+            if (encryptedUsernameString == null && encryptedPasswordString == null) {
+                listener.onError(new Exception("No user registered"));
+                return;
             }
+
+            byte[] encryptedUsernameBytes = Base64.decode(encryptedUsernameString, Base64.DEFAULT);
+            byte[] encryptedPasswordBytes = Base64.decode(encryptedPasswordString, Base64.DEFAULT);
+
+            KeyStore.Entry entry = keyStore.getEntry(ALIAS, null);
+            if (entry instanceof KeyStore.PrivateKeyEntry) {
+                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) entry;
+
+                Cipher cipher = Cipher.getInstance(CHIPPER_TRANSFORMATION);
+                cipher.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
+
+                byte[] decryptedUsernameBytes = cipher.doFinal(encryptedUsernameBytes);
+                byte[] decryptedPasswordBytes = cipher.doFinal(encryptedPasswordBytes);
+
+                String username = new String(decryptedUsernameBytes);
+                String password = new String(decryptedPasswordBytes);
+                listener.onSuccess(Pair.create(username, password));
+            }
+
         } catch (UnrecoverableEntryException | NoSuchPaddingException | IllegalBlockSizeException |
                  KeyStoreException | NoSuchAlgorithmException | BadPaddingException |
                  InvalidKeyException e) {

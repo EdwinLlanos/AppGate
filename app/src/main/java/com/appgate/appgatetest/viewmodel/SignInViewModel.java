@@ -3,9 +3,8 @@ package com.appgate.appgatetest.viewmodel;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.appgate.appgatetest.R;
-import com.appgate.appgatetest.model.StateUIModel;
+import com.appgate.appgatetest.base.viewmodel.BaseViewModel;
 import com.appgate.authentication.data.datasource.remote.model.TimeResponse;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
@@ -16,21 +15,20 @@ import static com.appgate.appgatetest.util.Constant.PASSWORD_PATTERN;
 import static com.appgate.authentication.domain.model.AttemptStatus.FAILURE;
 import static com.appgate.authentication.domain.model.AttemptStatus.SUCCESS;
 
-public class SignInViewModel extends ViewModel {
+public class SignInViewModel extends BaseViewModel {
     private final String TAG = SignInViewModel.class.getName();
     private final SignInUseCase signInUseCase;
     private final SaveAttemptUseCase saveAttemptUseCase;
-    private final MutableLiveData<StateUIModel> stateUI;
-    private StateUIModel stateUIModel = new StateUIModel();
+    private final MutableLiveData<Boolean> navigateToAttemptsScreen;
 
     public SignInViewModel(SignInUseCase signInUseCase, SaveAttemptUseCase saveAttemptUseCase) {
         this.signInUseCase = signInUseCase;
         this.saveAttemptUseCase = saveAttemptUseCase;
-        stateUI = new MutableLiveData<>(stateUIModel);
+        navigateToAttemptsScreen = new MutableLiveData<>(false);
     }
 
-    public LiveData<StateUIModel> getStateUI() {
-        return stateUI;
+    public LiveData<Boolean> getNavigateToAttemptsScreen() {
+        return navigateToAttemptsScreen;
     }
 
     public void checkCredentials(String email, String password) {
@@ -72,14 +70,12 @@ public class SignInViewModel extends ViewModel {
     }
 
     private void handlerValidateCredentialsSuccess(Boolean response) {
-        stateUIModel = new StateUIModel();
         if (response) {
             saveAttemptSuccess();
         } else {
             saveAttemptFailure();
-            stateUIModel.messageResource = R.string.error_incorrect_credentials;
+            messageResource.postValue(R.string.error_incorrect_credentials);
         }
-        stateUI.setValue(stateUIModel);
     }
 
     private void saveAttemptFailure() {
@@ -89,8 +85,8 @@ public class SignInViewModel extends ViewModel {
         saveAttemptUseCase.saveAttempt(latitude, longitude, FAILURE, new OnRequestCompletedListener<TimeResponse>() {
             @Override
             public void onSuccess(TimeResponse response) {
-                hideLoading();
                 handleSaveAttemptSuccess(response.toString());
+                hideLoading();
             }
 
             @Override
@@ -108,7 +104,7 @@ public class SignInViewModel extends ViewModel {
         saveAttemptUseCase.saveAttempt(latitude, longitude, SUCCESS, new OnRequestCompletedListener<TimeResponse>() {
             @Override
             public void onSuccess(TimeResponse response) {
-                stateUIModel.navigateToAttemptsScreen = true;
+                navigateToAttemptsScreen.postValue(true);
                 hideLoading();
             }
 
@@ -120,31 +116,15 @@ public class SignInViewModel extends ViewModel {
         });
     }
 
-    private void showMessage(int resource) {
-        stateUIModel.messageResource = resource;
-        stateUI.setValue(stateUIModel);
-    }
-
     private void showLoading() {
-        stateUIModel.isLoading = true;
-        showMessage(R.string.message_loading);
+        loading.postValue(true);
     }
 
     private void hideLoading() {
-        stateUIModel.isLoading = false;
-        stateUI.setValue(stateUIModel);
+        loading.postValue(false);
     }
 
     private void handleSaveAttemptSuccess(String response) {
         Log.d(TAG, response);
-        stateUIModel.isSuccess = true;
-        stateUIModel.messageResource = R.string.message_attempt_save_successful;
-        stateUI.setValue(stateUIModel);
-    }
-
-    private void handleFailure(Throwable throwable) {
-        stateUIModel.isError = true;
-        stateUIModel.message = throwable.getMessage();
-        stateUI.setValue(stateUIModel);
     }
 }

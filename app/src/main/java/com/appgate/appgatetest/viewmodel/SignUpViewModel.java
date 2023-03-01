@@ -2,9 +2,8 @@ package com.appgate.appgatetest.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.appgate.appgatetest.R;
-import com.appgate.appgatetest.model.StateUIModel;
+import com.appgate.appgatetest.base.viewmodel.BaseViewModel;
 import com.appgate.authentication.domain.repository.OnRequestCompletedListener;
 import com.appgate.authentication.domain.usecase.SaveAttemptUseCase;
 import com.appgate.authentication.domain.usecase.SignUpUseCase;
@@ -12,20 +11,20 @@ import com.appgate.authentication.domain.usecase.SignUpUseCase;
 import static com.appgate.appgatetest.util.Constant.EMAIL_PATTERN;
 import static com.appgate.appgatetest.util.Constant.PASSWORD_PATTERN;
 
-public class SignUpViewModel extends ViewModel {
+public class SignUpViewModel extends BaseViewModel {
     private final SignUpUseCase signInUseCase;
     private final SaveAttemptUseCase saveAttemptUseCase;
-    private final MutableLiveData<StateUIModel> stateUI;
-    private StateUIModel stateUIModel = new StateUIModel();
+
+    private final MutableLiveData<Boolean> navigateToSignInScreen;
 
     public SignUpViewModel(SignUpUseCase signInUseCase, SaveAttemptUseCase saveAttemptUseCase) {
         this.signInUseCase = signInUseCase;
         this.saveAttemptUseCase = saveAttemptUseCase;
-        stateUI = new MutableLiveData<>(stateUIModel);
+        navigateToSignInScreen = new MutableLiveData<>(false);
     }
 
-    public LiveData<StateUIModel> getStateUI() {
-        return stateUI;
+    public LiveData<Boolean> getNavigateToSignInScreen() {
+        return navigateToSignInScreen;
     }
 
     public void checkCredentials(String email, String password, String passwordConfirm) {
@@ -60,13 +59,11 @@ public class SignUpViewModel extends ViewModel {
         signInUseCase.encryptCredentials(email, password, new OnRequestCompletedListener<Boolean>() {
             @Override
             public void onSuccess(Boolean response) {
-                stateUIModel = new StateUIModel();
                 if (response) {
-                    stateUIModel.navigateToSignInScreen = true;
+                    navigateToSignInScreen.postValue(true);
                 } else {
-                    stateUIModel.messageResource = R.string.error_unexpected;
+                    messageResource.postValue(R.string.error_unexpected);
                 }
-                stateUI.setValue(stateUIModel);
             }
 
             @Override
@@ -74,16 +71,5 @@ public class SignUpViewModel extends ViewModel {
                 handleFailure(throwable);
             }
         });
-    }
-
-    private void showMessage(int resource) {
-        stateUIModel.messageResource = resource;
-        stateUI.setValue(stateUIModel);
-    }
-
-    private void handleFailure(Throwable throwable) {
-        stateUIModel.isError = true;
-        stateUIModel.message = throwable.getMessage();
-        stateUI.setValue(stateUIModel);
     }
 }

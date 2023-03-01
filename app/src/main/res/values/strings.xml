@@ -8,8 +8,8 @@
     <string name="btn_sing_in">Ingresar</string>
     <string name="btn_sing_up">Registrarme</string>
     <!--Messages-->
-    <string name="message_loading">Loading…</string>
-    <string name="message_attempt_save_successful">Intento guardado exitosamente.</string>
+    <string name="message_status_success">Exitoso</string>
+    <string name="message_status_failure">Fallido</string>
     <!--Warnings-->
     <string name="warning_email_required">El email es requerido.</string>
     <string name="warning_password_required">La contraseña es requerida.</string>
